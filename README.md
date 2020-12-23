@@ -482,3 +482,17 @@ namespace ConsoleApp1
         }
     }
 ```
+
+**保留两位小数**
+```C#
+    // 数字只有一位小数,但是要求保留两位小数
+    string numStr = string.Format("{0:0.00}", 2.3);
+```
+
+**计算间隔的天数**
+```C#
+    DateTime dt1 = DateTime.Now;
+    DateTime dt2 = new DateTime(2019, 6, 1);
+    TimeSpan ts = dt2 - dt1;
+    Console.WriteLine("间隔的天数为{0}天", ts.Days);
+```
