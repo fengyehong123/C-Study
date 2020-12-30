@@ -496,3 +496,58 @@ namespace ConsoleApp1
     TimeSpan ts = dt2 - dt1;
     Console.WriteLine("间隔的天数为{0}天", ts.Days);
 ```
+
+**Task的使用**
+```C#
+    /**
+        1. 返回一个Task的意思是说，该方法不能立刻给出一个结果，
+        但是你可以使用关键字 await，以确保你的代码暂停，直到结果就绪才继续执行。
+        当你编写代码访问数据库或者外部 API 服务的时候，Task 模式是很常见的，
+        因为在数据库（或者网络）响应之前，它不可能给出实际的结果。
+        2. 和JS的Promise用法类似
+        3. 异步编程的时候使用
+    **/
+    public async Task<IActionResult> Index()
+    {
+        var items = await _todoItemService.GetIncompleteItemsAsync();
+    }
+```
+
+**Main程序的注意点**
+```C#
+    class MainClass
+    {
+        /**
+            如果未使用 Main 的返回值，则返回 void 可以使代码变得略微简单。 
+            但是，返回整数可使程序将状态信息传递给调用可执行文件的其他程序或脚本。 
+            来自 Main 的返回值视为进程的退出代码。 
+            如果从 Main 返回 void，则退出代码将为隐式 0。
+        **/
+        static int Main(string[] args)
+        {
+            // 通过Length属性来确定参数是否存在
+            if (args.Length == 0)
+            {
+                Console.WriteLine("请输入参数");
+                return 1;
+            }
+
+            int num;
+            /**
+                尝试把用户输入的参数转换为数字,
+                如果test的结果为false,则转换失败
+                如果test的结果为true,则转换成功
+            **/ 
+            bool test = int.TryParse(args[0], out num);
+            if (!test)
+            {
+                Console.WriteLine("请输入一个数字类型的参数");
+                return 1;
+            }
+
+            Console.WriteLine($"用户输入的参数为{num}");
+
+            return 0;
+        }
+    }
+```
