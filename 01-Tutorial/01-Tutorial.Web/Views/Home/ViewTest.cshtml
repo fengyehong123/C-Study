@@ -1,0 +1,23 @@
+﻿@model _01_Tutorial.Web.model.Student
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>View测试</title>
+</head>
+<body>
+    <h1>Hello from ViewTest.cshtml</h1>
+    <!--
+
+        最上方的(小写)model是为了告诉下面的(大写)Model对应的数据类型
+        (大写)Model是前端传过来的对象
+    -->
+    <div>@Model.FirstName</div><br />
+    <div>@Model.LastName</div><br />
+</body>
+</html>

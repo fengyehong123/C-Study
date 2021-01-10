@@ -29,6 +29,9 @@ namespace _01_Tutorial.Web
 
             // 每一次web请求都会创建一个实例
             // services.AddScoped<IWelComeService, WelcomeService>();
+
+            // 注册MVC服务,MVC的服务不是默认添加的,我们需要手动添加一下
+            services.AddMvc();
         }
 
         /// <summary>
@@ -54,7 +57,7 @@ namespace _01_Tutorial.Web
              * **/
             // IConfiguration configuration
 
-            // 使用我们自己定义的接口,我们自己定义的接口需要手动注入到容器当中
+            // 使用我们自己定义的接口,我们自己定义的接口需要通过IServiceCollection接口手动注入到容器当中
             IWelComeService welComeService,
             // 导入日志接口,因为AspNetCore已经把这个类注入好了,因此我们可以无需注册就直接使用
             ILogger<Startup> logger
@@ -117,7 +120,7 @@ namespace _01_Tutorial.Web
             /**
              * 这个中间件的作用相当于UseDefaultFiles()和UseStaticFiles()
              * **/
-            app.UseFileServer();
+            // app.UseFileServer();
             /**
              * 启用默认文件中间件,默认是wwwroot文件夹
              * **/
@@ -125,7 +128,31 @@ namespace _01_Tutorial.Web
             /**
              * 启用静态文件中间件
              * **/
-            // app.UseStaticFiles();
+            app.UseStaticFiles();
+
+            /**
+             * 使用默认路由的MVC,该MVC会有默认的路由配置规则
+             *  当访问项目根路径的时候会找到HomeController类中的Index方法
+             * **/
+            // app.UseMvcWithDefaultRoute();
+
+            // 由于我们把.UseMvc()中的方法给注释掉了,因此需要手动在Controller类和方法中手动配置路由
+            app.UseMvc(builder => {
+                /**
+                 * 当我们访问 /Home/Index/3 的时候,会通过下面的路由配置
+                 * 找到HomeController类中的Index()方法
+                 * {controller}/{action}/{id?}中的id?代表id是可选的
+                 * **/
+                // builder.MapRoute("Default", "{controller}/{action}/{id?}");
+
+                // 给路由设置默认值,如果我们访问项目的根路径的话,就会默认访问/Home/Index
+                // builder.MapRoute("Default", "{controller=Home}/{action=Index}/{id?}");
+
+                /**
+                 * 上面这两种方式要求路由的名称和类名称和方法名要对应起来
+                 * 我们还可以像java中在类上添加路由标签的方式来实现路由的配置
+                 * **/
+            });
 
             /**
              * 不管我们收到什么样的HTTP请求,我们都会返回下面的响应
