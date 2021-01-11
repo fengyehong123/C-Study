@@ -1,9 +1,9 @@
 ﻿using _01_Tutorial.Web.model;
+using _01_Tutorial.Web.Services;
+using _01_Tutorial.Web.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace _01_Tutorial.Web.Controllers
 {
@@ -14,6 +14,15 @@ namespace _01_Tutorial.Web.Controllers
     [Route("home")]
     public class HomeController: Controller
     {
+        // 一般通过这样一个只读属性的对象接收注入的对象
+        private readonly IRepository<Student> _repository;
+
+        // 一般通过构造函数的方式进行接口注入
+        public HomeController(IRepository<Student> repository)
+        {
+            _repository = repository;
+        }
+
         [Route("index")]
         public IActionResult Index()
         {
@@ -46,12 +55,8 @@ namespace _01_Tutorial.Web.Controllers
         [Route("ViewTest")]
         public IActionResult ViewTest()
         {
-            var student = new Student
-            {
-                Id = 1,
-                FirstName = "Nick",
-                LastName = "Carter"
-            };
+            // 使用我们注册好的接口,获取所有的学生数据
+            var studentList = _repository.GetAll();
 
             /**
              * 我们只返回View()不加任何字符串参数的话,会寻找方法名所对应的视图
@@ -59,7 +64,50 @@ namespace _01_Tutorial.Web.Controllers
              * 返回View("Student")的话,会寻找Student视图 
              *      => /Views/Home/Student.cshtml(Views文件夹下的Home文件夹下的Student.cshtml文件)
              * **/
-            // 把student参数传递到视图当中
+            // 把studentList参数传递到视图当中
+            return View(studentList);
+        }
+
+        [Route("ViewModelTest")]
+        public IActionResult ViewModelTest()
+        {
+            // 使用我们注册好的接口,获取所有的学生数据
+            var studentList = _repository.GetAll();
+            // 把Student实体类转换为StudentViewModel实体类
+            var vms = studentList.Select(x => new StudentViewModel
+            {
+                Name = $"{x.FirstName} {x.LastName}",
+                Age = DateTime.Now.Subtract(x.BrithDate).Days / 365
+            });
+
+            var vm = new HomeIndexViewModel
+            {
+                Students = vms
+            };
+
+            return View(vm);
+        }
+
+        /**
+         * {id?}表示此参数可有可无
+         * 
+         * 下面这两种方式都可以把URL中的id自动封装到Detail(int id)中的id中
+         * /home/detail?id=1
+         * /home/detail/1 
+         * 
+         * 如果是下面的这种方式的话,只会封装1,而不会封装2
+         * /home/detail/1?id=2
+         * 
+         * **/
+        [Route("Detail/{id?}")]
+        public IActionResult Detail(int id)
+        {
+            var student = _repository.GetById(id);
+            if(student == null)
+            {
+                // 跳转到本Controller的Index方法
+                return RedirectToAction("Index");
+            }
             return View(student);
         }
 
@@ -79,7 +127,6 @@ namespace _01_Tutorial.Web.Controllers
         {
             // 直接返回文字
             return this.Content("Hello from HomeController Test method");
-            
         }
     }
 }

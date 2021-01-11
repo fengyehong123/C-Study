@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using _01_Tutorial.Web.interfacePackage;
+using _01_Tutorial.Web.model;
 using _01_Tutorial.Web.servicePackage;
+using _01_Tutorial.Web.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -24,11 +26,11 @@ namespace _01_Tutorial.Web
             // 通过单例模式来将我们的接口进行注册,在整个项目的生命周期中只会出现一次实例
             services.AddSingleton<IWelComeService, WelcomeService>();
 
+            // (将我们的接口进行注册)每一次web请求都会创建一个实例
+            services.AddScoped<IRepository<Student>, InMemoryRepository>();
+
             // 每次有方法请求IWelComeService接口的时候,都会创建一个实例
             // services.AddTransient<IWelComeService, WelcomeService>();
-
-            // 每一次web请求都会创建一个实例
-            // services.AddScoped<IWelComeService, WelcomeService>();
 
             // 注册MVC服务,MVC的服务不是默认添加的,我们需要手动添加一下
             services.AddMvc();
