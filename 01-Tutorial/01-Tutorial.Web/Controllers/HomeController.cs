@@ -76,6 +76,7 @@ namespace _01_Tutorial.Web.Controllers
             // 把Student实体类转换为StudentViewModel实体类
             var vms = studentList.Select(x => new StudentViewModel
             {
+                Id = x.Id,
                 Name = $"{x.FirstName} {x.LastName}",
                 Age = DateTime.Now.Subtract(x.BrithDate).Days / 365
             });
