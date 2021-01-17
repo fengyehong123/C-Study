@@ -13,5 +13,17 @@
 <body>
     <h1>@Model.FirstName @Model.LastName</h1>
     <a asp-action="ViewModelTest">返回到HomeController的ViewModelTest方法</a>
+    <hr />
+    
+    <div>
+        <h2>学生信息</h2>
+        <div>ID: @Model.Id</div><br />
+        <div>姓名: @Model.FirstName @Model.LastName</div><br />
+        <div>性别: @Model.Gender</div><br />
+        <div>出生日期: @Model.BrithDate.ToString("yyy-MM-dd")</div><br />
+    </div><br />
+
+          <a asp-action="ViewModelTest">返回到HomeController的ViewModelTest方法</a>
+
 </body>
 </html>

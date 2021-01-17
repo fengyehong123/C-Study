@@ -25,9 +25,10 @@ namespace _01_Tutorial.Web
         {
             // 通过单例模式来将我们的接口进行注册,在整个项目的生命周期中只会出现一次实例
             services.AddSingleton<IWelComeService, WelcomeService>();
+            services.AddSingleton<IRepository<Student>, InMemoryRepository>();
 
             // (将我们的接口进行注册)每一次web请求都会创建一个实例
-            services.AddScoped<IRepository<Student>, InMemoryRepository>();
+            // services.AddScoped<IRepository<Student>, InMemoryRepository>();
 
             // 每次有方法请求IWelComeService接口的时候,都会创建一个实例
             // services.AddTransient<IWelComeService, WelcomeService>();

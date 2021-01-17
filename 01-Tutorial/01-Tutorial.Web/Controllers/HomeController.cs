@@ -2,6 +2,7 @@
 using _01_Tutorial.Web.Services;
 using _01_Tutorial.Web.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System;
 using System.Linq;
 
@@ -110,6 +111,44 @@ namespace _01_Tutorial.Web.Controllers
                 return RedirectToAction("Index");
             }
             return View(student);
+        }
+
+        [Route("Create")]
+        [HttpGet]  // 默认就是get方法
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        [Route("Create")]
+        [HttpPost]  // 指定请求为post方法
+        public IActionResult Create(StudentCreateViewModel student)
+        {
+            var newStudent = new Student
+            {
+                FirstName = student.FirstName,
+                LastName = student.LastName,
+                BrithDate = student.BrithDate,
+                Gender = student.Gender
+            };
+
+            var newModel = _repository.Add(newStudent);
+
+            // 将student对象序列化为json字符串返回到前端
+            // return this.Content(JsonConvert.SerializeObject(student));
+
+            // 将添加成功的对象在Detail视图页面进行展示
+            // return View("Detail", newModel);
+
+            /**
+             * nameof(Detail)就相当于 "Detail"字符串,使用nameof的话,有利于重构
+             * 因为Detail方法需要一个参数,所以我们通过匿名类的方式传递参数id
+             * 
+             * 之所以不使用 View("Detail", newModel);的方式
+             * 而使用RedirectToAction(nameof(Detail), new { id = newModel.Id})的方式
+             * 是想等到student对象添加成功之后进行重定向改变浏览器的url,防止浏览器刷新造成多次表单提交
+             * **/
+            return RedirectToAction(nameof(Detail), new { id = newModel.Id});
         }
 
         /**

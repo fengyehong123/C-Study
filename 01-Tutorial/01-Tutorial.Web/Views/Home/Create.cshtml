@@ -1,0 +1,24 @@
+﻿@using _01_Tutorial.Web.model;
+@model _01_Tutorial.Web.model.Student;
+
+<h1>创建学生</h1>
+
+<form method="post">
+    <!--
+        我们在第一行声明了用到了Student模型
+        asp-for="FirstName"就相当于 艾特符号Model.FirstName
+    -->
+    <input asp-for="FirstName" />
+    <input asp-for="LastName" />
+    <input asp-for="BrithDate" type="date" />
+
+    <!--
+        准备一个下拉框
+        通过Html helper来把一个枚举类型转换为一个List
+    -->
+    <select asp-for="Gender" asp-items="Html.GetEnumSelectList<Gender>()">
+
+    </select>
+
+    <button type="submit" name="save">保存</button>
+</form>

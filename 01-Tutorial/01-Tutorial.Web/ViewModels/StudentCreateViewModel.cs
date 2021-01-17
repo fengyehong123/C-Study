@@ -1,13 +1,13 @@
-﻿using System;
+﻿using _01_Tutorial.Web.model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace _01_Tutorial.Web.model
+namespace _01_Tutorial.Web.ViewModels
 {
-    public class Student
+    public class StudentCreateViewModel
     {
-        public int Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public DateTime BrithDate { get; set; }

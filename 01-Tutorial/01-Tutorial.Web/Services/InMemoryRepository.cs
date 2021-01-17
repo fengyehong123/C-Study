@@ -31,5 +31,17 @@ namespace _01_Tutorial.Web.Services
             // 通过ID查询对应的Student实体类
             return _students.FirstOrDefault(x => x.Id == id);
         }
+
+        // 把添加之后的Student类型返回
+        public Student Add(Student newModel)
+        {
+            // 模拟id自增
+            var maxId = _students.Max(x => x.Id);  // 获取出最大的id
+            newModel.Id = maxId + 1;
+
+            _students.Add(newModel);
+
+            return newModel;
+        }
     }
 }
