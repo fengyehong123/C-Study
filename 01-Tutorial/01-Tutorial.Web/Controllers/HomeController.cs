@@ -122,33 +122,41 @@ namespace _01_Tutorial.Web.Controllers
 
         [Route("Create")]
         [HttpPost]  // 指定请求为post方法
+        [ValidateAntiForgeryToken]  // 针对post表单提交要加上这个注解,因为前端会放置一个隐藏域,表单提交的时候会把隐藏域提交,防止跨站请求伪造
         public IActionResult Create(StudentCreateViewModel student)
         {
-            var newStudent = new Student
+            // 如果StudentCreateViewModel中添加注解的属性字段通过了验证的话
+            if (ModelState.IsValid)
             {
-                FirstName = student.FirstName,
-                LastName = student.LastName,
-                BrithDate = student.BrithDate,
-                Gender = student.Gender
-            };
+                var newStudent = new Student
+                {
+                    FirstName = student.FirstName,
+                    LastName = student.LastName,
+                    BrithDate = student.BrithDate,
+                    Gender = student.Gender
+                };
 
-            var newModel = _repository.Add(newStudent);
+                var newModel = _repository.Add(newStudent);
 
-            // 将student对象序列化为json字符串返回到前端
-            // return this.Content(JsonConvert.SerializeObject(student));
+                // 将student对象序列化为json字符串返回到前端
+                // return this.Content(JsonConvert.SerializeObject(student));
 
-            // 将添加成功的对象在Detail视图页面进行展示
-            // return View("Detail", newModel);
+                // 将添加成功的对象在Detail视图页面进行展示
+                // return View("Detail", newModel);
 
-            /**
-             * nameof(Detail)就相当于 "Detail"字符串,使用nameof的话,有利于重构
-             * 因为Detail方法需要一个参数,所以我们通过匿名类的方式传递参数id
-             * 
-             * 之所以不使用 View("Detail", newModel);的方式
-             * 而使用RedirectToAction(nameof(Detail), new { id = newModel.Id})的方式
-             * 是想等到student对象添加成功之后进行重定向改变浏览器的url,防止浏览器刷新造成多次表单提交
-             * **/
-            return RedirectToAction(nameof(Detail), new { id = newModel.Id});
+                /**
+                 * nameof(Detail)就相当于 "Detail"字符串,使用nameof的话,有利于重构
+                 * 因为Detail方法需要一个参数,所以我们通过匿名类的方式传递参数id
+                 * 
+                 * 之所以不使用 View("Detail", newModel);的方式
+                 * 而使用RedirectToAction(nameof(Detail), new { id = newModel.Id})的方式
+                 * 是想等到student对象添加成功之后进行重定向改变浏览器的url,防止浏览器刷新造成多次表单提交
+                 * **/
+                return RedirectToAction(nameof(Detail), new { id = newModel.Id });
+            }
+
+            // 如果没有通过验证还是显示原来的视图
+            return View();
         }
 
         /**
