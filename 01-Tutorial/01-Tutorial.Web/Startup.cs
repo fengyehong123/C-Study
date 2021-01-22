@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using _01_Tutorial.Web.Data;
 using _01_Tutorial.Web.interfacePackage;
 using _01_Tutorial.Web.model;
 using _01_Tutorial.Web.servicePackage;
@@ -9,6 +10,7 @@ using _01_Tutorial.Web.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -17,18 +19,37 @@ namespace _01_Tutorial.Web
 {
     public class Startup
     {
+        private readonly IConfiguration _configuration;
+
+        // 通过构造函数+接口的方式,在Startup类的构造函数中获取配置文件对象
+        public Startup(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+
         /// <summary>
         /// 通过IServiceCollection接口来实现服务的注册
         /// </summary>
         /// <param name="services"></param>
         public void ConfigureServices(IServiceCollection services)
         {
+            // 获取appsettings.json中保存到数据库连接字符串
+            // 获取方式1: var connectionString = _configuration["ConnectionStrings:DefaultConnection"];
+            // 获取方式2: var connectionString = _configuration.GetConnectionString("DefaultConnection");
+            var connectionString = _configuration.GetConnectionString("DefaultConnection");
+
+            // 添加数据库连接类的依赖注入
+            services.AddDbContext<DataContext>(options => {
+                // 指定使用的数据库类型是SqlServer,同时把连接字符串放进去
+                options.UseSqlServer(connectionString);
+            });
+
             // 通过单例模式来将我们的接口进行注册,在整个项目的生命周期中只会出现一次实例
             services.AddSingleton<IWelComeService, WelcomeService>();
-            services.AddSingleton<IRepository<Student>, InMemoryRepository>();
+            // services.AddSingleton<IRepository<Student>, InMemoryRepository>();
 
-            // (将我们的接口进行注册)每一次web请求都会创建一个实例
-            // services.AddScoped<IRepository<Student>, InMemoryRepository>();
+            // 每一次Http请求生成一个实例
+            services.AddScoped<IRepository<Student>, EFCoreRepository>();
 
             // 每次有方法请求IWelComeService接口的时候,都会创建一个实例
             // services.AddTransient<IWelComeService, WelcomeService>();
