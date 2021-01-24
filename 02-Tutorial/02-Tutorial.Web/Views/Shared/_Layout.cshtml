@@ -1,0 +1,26 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+</head>
+<body>
+    <h1>我是在模板文件中放置的内容</h1>
+    <div>
+        <!--
+            我们制作的页面都会渲染到RenderBody()标记的地方
+        -->
+        @RenderBody()
+    </div>
+
+    <hr />
+
+    <div>
+        <!--
+            指定一个渲染Section,名称叫bottom
+            required: false => 表示并不是一个页面都需要有这一部分
+        -->
+        @RenderSection("bottom", required: false)
+    </div>
+</body>
+</html>

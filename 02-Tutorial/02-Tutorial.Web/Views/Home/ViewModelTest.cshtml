@@ -1,56 +1,27 @@
-﻿@using _02_Tutorial.Web.ViewModels;
+﻿<!--
+    因为我们已经在 _ViewImports.cshtml 中引用了HomeIndexViewModel所对应的命名空间,因此此处无需引用
+-->
 @model HomeIndexViewModel;
 @{
-    Layout = null;
+    // 动态的指定Title
+    ViewBag.Title = "Home Index";
+
+    // 指定此页面要使用的模板
+    // Layout = "~/Views/Shared/_Layout.cshtml"; 我们已经把这行代码放到_ViewStart.cshtml文件中了
 }
 
-<!DOCTYPE html>
+@*
+    使用TagHelper的方式
+    指定使用的共通部品. _StudentTable是在Home文件夹下创建的_StudentTable.cshtml文件
+*@
+<partial name="_StudentTable" for="Students">
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>View测试</title>
-</head>
-<body>
-    <h1>Students</h1>
-    <ul>
-        @foreach (var s in Model.Students)
-        {
-            <li>
-                @s.Name (@s.Age)
-                <!--
-                    比较原始的在html中创建超链接的方式
-                    <a href="/Home/Detail/@s.Id">明细</a>    
-                -->
-                <!--
-                    使用Html Help来创建超链接
-                    参数1: 超链接文字
-                    参数2: Controller对应的名称
-                    参数3: 对应的参数
-                    @Html.ActionLink("明细", "Detail", new { id = s.Id });
-                -->
-                
-                <!--
-                    使用TagHelper来创建超链接
-                    首先在Views文件夹下面通过[Razor视图导入模板]新建一个.cshtml文件
-                    然后在文件中添加 艾特符号addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers 声明要引入使用的包
-                    然后就可以在.cshtml文件中使用TagHelper语法了
-                    asp-action="Detail"
-                        指定要使用的方法
-                    asp-controller="Home"
-                        指定视图所对应的Controller,如果使用视图本身所对应的Controller的话,可以省略
-                    asp-route-id="XXX"
-                        指定路由要携带的参数,如果要携带id,就写asp-route-id="XXX"
-                        如果要携带name,就写asp-route-name="XXX"
-                    可以通过asp- 这个前缀来获取很多方法
-                -->
-                <a asp-action="Detail" asp-controller="Home" asp-route-id="@s.Id">明细Tag</a>
-            </li>
-        }
-    </ul>
-    <hr />
+<!--
+    指定一个名称叫做bottom的section,把我们的代码块放到这里面
+-->
+@section bottom
+    {
     <div>
         <a asp-action="Create">添加一个学生</a>
     </div>
-</body>
-</html>
+}
