@@ -1,0 +1,49 @@
+﻿@using _02_Tutorial.Web.model;
+@using _02_Tutorial.Web.ViewModels
+@model StudentCreateViewModel;
+
+<h1>创建学生</h1>
+
+<form method="post">
+    <!--
+        我们在第一行声明了用到了Student模型
+        asp-for="FirstName"就相当于 艾特符号Model.FirstName
+    -->
+    <div>
+        <!---
+            <label asp-for="FirstName">
+            和model中的FirstName属性进行绑定
+        -->
+        <label asp-for="FirstName"></label>
+        <input asp-for="FirstName" />
+        <!--如果该属性有验证问题,就会把错误显示到这个地方-->
+        <span asp-validation-for="FirstName"></span>
+    </div>
+    <div>
+        <label asp-for="LastName"></label>
+        <input asp-for="LastName" />
+        <span asp-validation-for="LastName"></span>
+    </div>
+    <div>
+        <label asp-for="BrithDate"></label>
+        <input asp-for="BrithDate" type="date" />
+        <span asp-validation-for="BrithDate"></span>
+    </div>
+
+    <!--
+        准备一个下拉框
+        通过Html helper来把一个枚举类型转换为一个List
+    -->
+    <div>
+        <label asp-for="Gender"></label>
+        <select asp-for="Gender" asp-items="Html.GetEnumSelectList<Gender>()"></select>
+        <span asp-validation-for="Gender"></span>
+    </div>
+    <hr />
+
+    <!--验证错误信息的汇总(属性级别)-->
+    <div asp-validation-summary="All"></div>
+    <!--Model级别的错误-->
+    <div asp-validation-summary="ModelOnly"></div>
+    <button type="submit" name="save">保存</button>
+</form>

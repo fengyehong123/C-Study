@@ -1,0 +1,56 @@
+﻿@using _02_Tutorial.Web.ViewModels;
+@model HomeIndexViewModel;
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>View测试</title>
+</head>
+<body>
+    <h1>Students</h1>
+    <ul>
+        @foreach (var s in Model.Students)
+        {
+            <li>
+                @s.Name (@s.Age)
+                <!--
+                    比较原始的在html中创建超链接的方式
+                    <a href="/Home/Detail/@s.Id">明细</a>    
+                -->
+                <!--
+                    使用Html Help来创建超链接
+                    参数1: 超链接文字
+                    参数2: Controller对应的名称
+                    参数3: 对应的参数
+                    @Html.ActionLink("明细", "Detail", new { id = s.Id });
+                -->
+                
+                <!--
+                    使用TagHelper来创建超链接
+                    首先在Views文件夹下面通过[Razor视图导入模板]新建一个.cshtml文件
+                    然后在文件中添加 艾特符号addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers 声明要引入使用的包
+                    然后就可以在.cshtml文件中使用TagHelper语法了
+                    asp-action="Detail"
+                        指定要使用的方法
+                    asp-controller="Home"
+                        指定视图所对应的Controller,如果使用视图本身所对应的Controller的话,可以省略
+                    asp-route-id="XXX"
+                        指定路由要携带的参数,如果要携带id,就写asp-route-id="XXX"
+                        如果要携带name,就写asp-route-name="XXX"
+                    可以通过asp- 这个前缀来获取很多方法
+                -->
+                <a asp-action="Detail" asp-controller="Home" asp-route-id="@s.Id">明细Tag</a>
+            </li>
+        }
+    </ul>
+    <hr />
+    <div>
+        <a asp-action="Create">添加一个学生</a>
+    </div>
+</body>
+</html>
