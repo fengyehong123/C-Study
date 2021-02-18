@@ -20,8 +20,13 @@
     指定一个名称叫做bottom的section,把我们的代码块放到这里面
 -->
 @section bottom
-    {
+{
     <div>
         <a asp-action="Create">添加一个学生</a>
     </div>
 }
+
+@*
+    使用我们定义的组件,可以向定义的组件中放入参数  
+*@
+@await Component.InvokeAsync("Welcome", 123)
