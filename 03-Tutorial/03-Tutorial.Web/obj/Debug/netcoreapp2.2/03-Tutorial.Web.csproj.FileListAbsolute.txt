@@ -30,3 +30,5 @@ G:\CShape_Study\03-Tutorial\03-Tutorial.Web\obj\Debug\netcoreapp2.2\03-Tutorial.
 G:\CShape_Study\03-Tutorial\03-Tutorial.Web\obj\Debug\netcoreapp2.2\03-Tutorial.Web.dll
 G:\CShape_Study\03-Tutorial\03-Tutorial.Web\obj\Debug\netcoreapp2.2\03-Tutorial.Web.pdb
 G:\CShape_Study\03-Tutorial\03-Tutorial.Web\obj\Debug\netcoreapp2.2\03-Tutorial.Web.csproj.CopyComplete
+G:\CShape_Study\03-Tutorial\03-Tutorial.Web\obj\Debug\netcoreapp2.2\Razor\Views\Account\Login.g.cshtml.cs
+G:\CShape_Study\03-Tutorial\03-Tutorial.Web\obj\Debug\netcoreapp2.2\Razor\Views\Account\Register.g.cshtml.cs
