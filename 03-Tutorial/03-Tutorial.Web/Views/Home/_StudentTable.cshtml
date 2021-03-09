@@ -1,0 +1,18 @@
+﻿<!--声明@model的的类型-->
+@model IEnumerable<StudentViewModel>
+
+<table>
+    <thead>
+        <tr>
+            <th>姓名</th>
+            <th>年龄</th>
+        </tr>
+    </thead>
+    @foreach (var s in Model)
+    {
+        @*
+            使用TagHelper中的方法,把_StudentRow这个组件引入
+        *@
+        <partial name="_StudentRow" for="@s" />
+    }
+</table>

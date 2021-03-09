@@ -1,0 +1,32 @@
+﻿<!--
+    因为我们已经在 _ViewImports.cshtml 中引用了HomeIndexViewModel所对应的命名空间,因此此处无需引用
+-->
+@model HomeIndexViewModel;
+@{
+    // 动态的指定Title
+    ViewBag.Title = "Home Index";
+
+    // 指定此页面要使用的模板
+    // Layout = "~/Views/Shared/_Layout.cshtml"; 我们已经把这行代码放到_ViewStart.cshtml文件中了
+}
+
+@*
+    使用TagHelper的方式
+    指定使用的共通部品. _StudentTable是在Home文件夹下创建的_StudentTable.cshtml文件
+*@
+<partial name="_StudentTable" for="Students">
+
+<!--
+    指定一个名称叫做bottom的section,把我们的代码块放到这里面
+-->
+@section bottom
+{
+    <div>
+        <a asp-action="Create">添加一个学生</a>
+    </div>
+}
+
+@*
+    使用我们定义的组件,可以向定义的组件中放入参数  
+*@
+@await Component.InvokeAsync("Welcome", 123)
