@@ -6,6 +6,8 @@ using _03_Tutorial.Web.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -38,6 +40,24 @@ namespace _03_Tutorial.Web
             services.AddDbContext<DataContext>(options => {
                 // 指定使用的数据库类型是SqlServer,同时把连接字符串放进去
                 options.UseSqlServer(connectionString);
+            });
+
+            // 将Identity认证自己对应的DbContext注入到容器中
+            services.AddDbContext<IdentityDbContext>(options => 
+                options.UseSqlServer(connectionString, b => b.MigrationsAssembly("03-Tutorial.Web"))
+            );
+            // 注册服务
+            services.AddDefaultIdentity<IdentityUser>().AddEntityFrameworkStores<IdentityDbContext>();
+            // 默认的认证服务对密码有一定的要求,我们可以通过下面的方式对其进行配置
+            services.Configure<IdentityOptions>(options => {
+                // 密码配置
+                options.Password.RequireDigit = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequiredLength = 1;
+                options.Password.RequiredUniqueChars = 1;
+
             });
 
             // 通过单例模式来将我们的接口进行注册,在整个项目的生命周期中只会出现一次实例
@@ -121,6 +141,8 @@ namespace _03_Tutorial.Web
                 FileProvider = new PhysicalFileProvider(Path.Combine(env.ContentRootPath, "node_modules"))
             });
 
+            // 开启认证中间件的使用
+            app.UseAuthentication();
 
             // 由于我们把.UseMvc()中的方法给注释掉了,因此需要手动在Controller类和方法中手动配置路由
             app.UseMvc(builder => {

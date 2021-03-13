@@ -11,25 +11,31 @@ namespace _03_Tutorial.Web.Controllers
     [Route("Account")]
     public class AccountController: Controller
     {
+        // 用来对用户进行身份认证
         private readonly SignInManager<IdentityUser> _signInManager;
+        // 用来操作用户的类,这个类可以创建删除用户,做和用户交互的相关操作,并把交互的结果放到数据存储中
         private readonly UserManager<IdentityUser> _userManager;
 
         // 进行依赖注入
         public AccountController(
-            SignInManager<IdentityUser> signInManager, 
+           
+            SignInManager<IdentityUser> signInManager,
             UserManager<IdentityUser> userManager)
         {
             _signInManager = signInManager;
             _userManager = userManager;
         }
 
+        [HttpGet]
         [Route("Login")]
         public IActionResult Login()
         {
+            // 返回视图,返回Login视图
             return View();
         }
 
         [HttpPost]
+        [Route("Login")]
         public async Task<IActionResult> Login(LoginViewModel loginViewModel)
         {
             // 验证用户名和密码是不是都填写了
@@ -47,7 +53,7 @@ namespace _03_Tutorial.Web.Controllers
                 // 如果密码也验证成功,说明用户校验通过,就直接跳转到首页
                 if(result.Succeeded)
                 {
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Login", "Account");
                 }
             }
 
@@ -57,6 +63,7 @@ namespace _03_Tutorial.Web.Controllers
         }
 
         // 返回到Register视图
+        [HttpGet]
         [Route("Register")]
         public IActionResult Register()
         {
@@ -65,9 +72,10 @@ namespace _03_Tutorial.Web.Controllers
 
         // 注册用户
         [HttpPost]
+        [Route("Register")]
         public async Task<IActionResult> Register(RegisterViewModel registerViewModel)
         {
-            if(!ModelState.IsValid)
+            if(ModelState.IsValid)
             {
                 var user = new IdentityUser
                 {
@@ -77,7 +85,7 @@ namespace _03_Tutorial.Web.Controllers
                 var result = await _userManager.CreateAsync(user, registerViewModel.Password);
                 if(result.Succeeded)
                 {
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Login", "Account");
                 }
             }
 
@@ -91,7 +99,7 @@ namespace _03_Tutorial.Web.Controllers
             // 进行登出操作
             await _signInManager.SignOutAsync();
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Login", "Account");
         }
     }
 }

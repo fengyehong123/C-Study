@@ -1,4 +1,9 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+<!DOCTYPE html>
+
+@*在此处注入认证管理类*@
+@inject SignInManager<IdentityUser> SingInManager
+
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
@@ -19,35 +24,54 @@
 
     <nav class="navbar navbar-expand-lg navbar-light bd-light">
         <a class="navbar-brand" href="#">Navbar</a>
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
-                <a asp-controller="Account" asp-action="Register">注册</a>
-            </li>
-            <li class="nav-item">
-                <a asp-controller="Account" asp-action="Login">登录</a>
-            </li>
-        </ul>
-    </nav>
 
+        @*判断用户是否已经登录*@
+        @if (SingInManager.IsSignedIn(User))
+        {
+            @*如果用户已经登录成功或者处于登录状态,就显示登出按钮*@
+            <form asp-controller="Account" asp-action="Logout" method="post" id="logoutForm">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a href="#" onclick="logout()">登出</a>
+                    </li>
+                </ul>
+            </form> 
+        }
+        else
+        {
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a asp-controller="Account" asp-action="Register">注册</a>
+                </li>
+                <li class="nav-item">
+                    <a asp-controller="Account" asp-action="Login">登录</a>
+                </li>
+            </ul>
+        }
 
-    <div>
-        <!--
-            我们制作的页面都会渲染到RenderBody()标记的地方
-        -->
-        @RenderBody()
-    </div>
+        <div>
 
-    <hr />
+            @*我们制作的页面都会渲染到RenderBody()标记的地方*@
+            @RenderBody()
+        </div>
 
-    <div>
-        <!--
+        <hr />
+
+        <div>
+            <!--
             指定一个渲染Section,名称叫bottom
             required: false => 表示并不是一个页面都需要有这一部分
         -->
-        @RenderSection("bottom", required: false)
-    </div>
-    <script src="~/node_modules/jquery/dist/jquery.js"></script>
-    <script src="~/node_modules/jquery-validation/dist/jquery.validate.js"></script>
-    <script src="~/node_modules/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.js"></script>
+            @RenderSection("bottom", required: false)
+        </div>
+        <script src="~/node_modules/jquery/dist/jquery.js"></script>
+        <script src="~/node_modules/jquery-validation/dist/jquery.validate.js"></script>
+        <script src="~/node_modules/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.js"></script>
+        <script>
+            function logout() {
+                document.getElementById("logoutForm").submit();
+            }
+
+        </script>
 </body>
 </html>
